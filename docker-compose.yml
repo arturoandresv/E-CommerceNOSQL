@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  dynamodb_local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodblocal
+    user: root
+    restart: always
+    ports:
+      - "3000:8000"
+    volumes:
+      - dynamodb_local_volume:/home/dynamodblocal/data
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    networks:
+      - aws_network
+  aws_cli:
+    image: amazon/aws-cli:latest
+    container_name: awscli
+    stdin_open: true
+    tty: true
+    entrypoint: /bin/bash
+    networks:
+      - aws_network
+    environment:
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_DEFAULT_REGION=us-east-1
+networks:
+  aws_network:
+    driver: bridge
+volumes:
+  dynamodb_local_volume:
