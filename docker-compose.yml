@@ -24,6 +24,14 @@ services:
       - AWS_ACCESS_KEY_ID=local
       - AWS_SECRET_ACCESS_KEY=local
       - AWS_DEFAULT_REGION=us-east-1
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - aws_network
 networks:
   aws_network:
     driver: bridge
