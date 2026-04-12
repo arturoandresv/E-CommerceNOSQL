@@ -1,4 +1,8 @@
 from pydantic_settings import BaseSettings
+from pathlib import Path
+
+# Find .env in the project root
+env_path = Path(__file__).resolve().parent.parent.parent / ".env"
 
 class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: str
@@ -9,6 +13,6 @@ class Settings(BaseSettings):
     REDIS_PORT: int
 
     class Config:
-        env_file = ".env"
+        env_file = str(env_path)
 
 settings = Settings()
