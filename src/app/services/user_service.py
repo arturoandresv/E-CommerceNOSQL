@@ -1,6 +1,7 @@
 import json
 from app.repositories.user_repository import UserRepository
 from app.database.redis import redis_client
+from app.database.dynamo import DecimalEncoder
 
 class UserService:
 
@@ -25,7 +26,7 @@ class UserService:
             return json.loads(cached)
         item = self.repo.get_orders_by_user(user_id)
         if item:
-            self.redis.setex(cache_key, 300, json.dumps(item))
+            self.redis.setex(cache_key, 300, json.dumps(item, cls=DecimalEncoder))
         return item
 
     def get_payment_methods(self, user_id):

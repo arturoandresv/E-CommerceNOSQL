@@ -1,6 +1,7 @@
 import json
 from app.repositories.order_repository import OrderRepository
 from app.database.redis import redis_client
+from app.database.dynamo import DecimalEncoder
 
 class OrderService:
 
@@ -15,7 +16,7 @@ class OrderService:
             return json.loads(cached)
         item = self.repo.get_order_detail(order_id)
         if item:
-            self.redis.setex(cache_key, 300, json.dumps(item))
+            self.redis.setex(cache_key, 300, json.dumps(item, cls=DecimalEncoder))
         return item
 
     def get_items_by_order(self, order_id: str):
@@ -25,7 +26,7 @@ class OrderService:
             return json.loads(cached)
         item = self.repo.get_items_by_order(order_id)
         if item:
-            self.redis.setex(cache_key, 300, json.dumps(item))
+            self.redis.setex(cache_key, 300, json.dumps(item, cls=DecimalEncoder))
         return item
 
     def create_order(self, user_id: str, order_id: str, data: dict):

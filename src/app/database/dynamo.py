@@ -1,5 +1,14 @@
-import boto3 
-from app.config import settings 
+import boto3
+import json
+from decimal import Decimal
+from app.config import settings
+
+# Custom encoder to handle Decimal types from DynamoDB
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super().default(obj)
 
 endpoint_url = "http://localhost:3000"
 
