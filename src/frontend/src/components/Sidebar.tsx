@@ -1,4 +1,4 @@
-function Sidebar() {
+export const Sidebar = () => {
   return (
     <nav className="bg-[#060e20] h-screen w-64 fixed left-0 top-0 flex flex-col py-8 z-50">
       

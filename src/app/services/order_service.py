@@ -1,7 +1,10 @@
 import json
+import uuid
 from app.repositories.order_repository import OrderRepository
 from app.database.redis import redis_client
 from app.database.dynamo import DecimalEncoder
+from fastapi import BackgroundTasks
+
 
 class OrderService:
 
@@ -13,7 +16,10 @@ class OrderService:
         cache_key = f"order:{order_id}"
         cached = self.redis.get(cache_key)
         if cached:
-            return json.loads(cached)
+            return {
+            "source": "Redis (cache)",
+            "order": json.loads(cached)
+        }
         item = self.repo.get_order_detail(order_id)
         if item:
             self.redis.setex(cache_key, 300, json.dumps(item, cls=DecimalEncoder))
@@ -23,13 +29,23 @@ class OrderService:
         cache_key = f"order:{order_id}:items"
         cached = self.redis.get(cache_key)
         if cached:
-            return json.loads(cached)
+            return {
+            "source": "Redis (cache)",
+            "order": json.loads(cached)
+        }
         item = self.repo.get_items_by_order(order_id)
         if item:
             self.redis.setex(cache_key, 300, json.dumps(item, cls=DecimalEncoder))
         return item
 
-    def create_order(self, user_id: str, order_id: str, data: dict):
-        self.repo.create_order(user_id, order_id, data)
-        self.redis.delete(f"user:{user_id}:orders")
+    def create_order(self, user_id: str, data: dict, background_tasks: BackgroundTasks):
+        
+        order_id = str(uuid.uuid4())
+        data["order_id"] = order_id
+
+        cache_key = f"order:{order_id}"
+        self.redis.setex(cache_key, 300, json.dumps(data, cls=DecimalEncoder))
+
+        background_tasks.add_task(self.repo.create_order, user_id, order_id, data)
+
         return data

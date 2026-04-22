@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import Sidebar from './components/Sidebar'
-import Header from './components/Header'
-import UserProfile from './components/UserProfile'
-import OrderDetail from './components/OrderDetail'
-import OrderHistory from './components/OrderHistory'
+import { Sidebar, Header, UserProfile, OrderDetail, OrderHistory} from './components/index'
 import { api } from './services/api'
 import type { User, Address, PaymentMethod, Order, OrderItem } from './interfaces'
 

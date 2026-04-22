@@ -33,3 +33,14 @@ class OrderItem(BaseModel):
     quantity: int
     unit_price: float
     subtotal: float
+
+class UserPost(BaseModel):
+    name: str
+    email:str
+
+class OrderPost(BaseModel):
+    user_id: str
+    status: str                   
+    total: float
+    created_at: str
+    shipping_address: str

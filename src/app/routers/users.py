@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from app.services.user_service import UserService
-from app.models.schemas import UserProfile
+from app.models.schemas import UserProfile, UserPost
 
 router = APIRouter(prefix="/users", tags=["Users"])
 service = UserService()
@@ -22,5 +22,5 @@ def get_addresses(user_id: str):
         return service.get_addresses(user_id)
 
 @router.post("")
-def create_user(user: UserProfile):
-       return service.create_user(user.user_id, user.model_dump())
+def create_user(user: UserPost, background_task: BackgroundTasks):
+       return service.create_user(user.model_dump(), background_task)

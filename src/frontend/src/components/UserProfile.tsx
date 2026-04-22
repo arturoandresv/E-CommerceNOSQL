@@ -6,7 +6,7 @@ interface UserProfileProps {
   readonly paymentMethods: PaymentMethod[]
 }
 
-function UserProfile({ user, addresses, paymentMethods }: UserProfileProps) {
+export const UserProfile = ({ user, addresses, paymentMethods }: UserProfileProps) => {
   return (
     <div className="col-span-12 lg:col-span-4 space-y-8">
       <section className="bg-surface-container-low p-8 rounded-xl">

@@ -5,7 +5,7 @@ interface OrderDetailProps {
   readonly items: OrderItem[]
 }
 
-function OrderDetail({ order, items }: OrderDetailProps) {
+export const OrderDetail = ({ order, items }: OrderDetailProps) => {
   if (!order) return null
 
   return (
@@ -61,5 +61,3 @@ function OrderDetail({ order, items }: OrderDetailProps) {
     </section>
   )
 }
-
-export default OrderDetail

@@ -4,7 +4,7 @@ interface OrderHistoryProps {
   readonly orders: Order[]
 }
 
-function OrderHistory({ orders }:OrderHistoryProps) {
+export const OrderHistory = ({ orders }:OrderHistoryProps) => {
   return (
     <section>
       <div className="flex justify-between items-center mb-6">

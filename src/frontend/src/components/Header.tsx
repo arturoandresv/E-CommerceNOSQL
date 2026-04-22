@@ -4,7 +4,7 @@ interface HeaderProps {
   readonly user: User | null
 }
 
-function Header({ user }: HeaderProps) {
+export const Header = ({ user }: HeaderProps) => {
   return (
     <header className="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#060e20]/60 backdrop-blur-xl flex justify-between items-center px-8 h-20">
       <div className="flex items-center w-1/2">
