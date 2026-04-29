@@ -12,6 +12,7 @@ services:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     networks:
       - aws_network
+
   aws_cli:
     image: amazon/aws-cli:latest
     container_name: awscli
@@ -24,6 +25,7 @@ services:
       - AWS_ACCESS_KEY_ID=local
       - AWS_SECRET_ACCESS_KEY=local
       - AWS_DEFAULT_REGION=us-east-1
+
   redis:
     image: redis:latest
     container_name: redis
@@ -32,8 +34,33 @@ services:
       - "6379:6379"
     networks:
       - aws_network
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    restart: always
+    ports:
+      - "4566:4566"       # Gateway principal (todos los servicios)
+      - "4510-4559:4510-4559"  # Puertos externos de servicios
+    environment:
+      - SERVICES=lambda,apigateway,iam,logs,s3
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_DEFAULT_REGION=us-east-1
+      - HOSTNAME_EXTERNAL=localstack
+    volumes:
+      - localstack_volume:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock  # necesario para Lambda con Docker
+    networks:
+      - aws_network
+
 networks:
   aws_network:
     driver: bridge
+
 volumes:
   dynamodb_local_volume:
+  localstack_volume:
