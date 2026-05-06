@@ -1,0 +1,22 @@
+FROM python:3.9-slim
+
+# Instalar dependencias del sistema y Node.js (necesario para AWS CDK)
+RUN apt-get update && apt-get install -y curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalar AWS CDK globalmente
+RUN npm install -g aws-cdk
+
+WORKDIR /app
+
+# Instalar dependencias globales de Python para el proyecto Serverless
+RUN pip install --no-cache-dir aws-cdk-lib constructs pydantic
+
+# Mantener el contenedor en ejecución para poder iterar en él
+CMD ["tail", "-f", "/dev/null"]
+ENV AWS_ENDPOINT_URL=http://localstack:4566
+ENV AWS_ACCESS_KEY_ID=test
+ENV AWS_SECRET_ACCESS_KEY=test
+ENV AWS_DEFAULT_REGION=us-east-1

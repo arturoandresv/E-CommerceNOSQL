@@ -32,6 +32,24 @@ services:
       - "6379:6379"
     networks:
       - aws_network
+
+  cdk_env:
+    build:
+      context: .
+      dockerfile: Dockerfile.cdk
+    container_name: cdk_env
+    volumes:
+      - .:/app
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    networks:
+      - aws_network
+    environment:
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_DEFAULT_REGION=us-east-1
+
 networks:
   aws_network:
     driver: bridge
